@@ -3,6 +3,6 @@
 
     <string name="app_name">Dot Colonies</string>
     <string name="action_settings">Settings</string>
-    <string test="test">test</string>
-
+	<string name="main_image_str">"Image displayed on the game's main screen."</string>
+    
 </resources>
