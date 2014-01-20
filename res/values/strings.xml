@@ -3,8 +3,9 @@
 
     <string name="app_name">Dot Colonies</string>
     <string name="action_settings">Settings</string>
-    <string name="play_button">Play</string>
 	<string name="splash_descrip">Image displayed on splash screen</string>
+	<string name="pbutt_descrip">The play button</string>
+	<string name="exbutt_descrip">The exit button</string>
 	<string name="splash_text">A Nhieu ting yow.</string>
     
 </resources>

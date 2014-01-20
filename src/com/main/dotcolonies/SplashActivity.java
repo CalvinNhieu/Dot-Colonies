@@ -13,12 +13,15 @@ public class SplashActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		
+		// Handler will delay the thread that redirects to main menu (to display the splash...)
 		new Handler().postDelayed(new Thread() {
 			@Override
+			// the game will run inside this thread
 			public void run() {
 				Intent toMain = new Intent (SplashActivity.this, MainActivity.class);
 				SplashActivity.this.startActivity(toMain);
 				SplashActivity.this.finish();
+				// animation not working...
 				overridePendingTransition(R.layout.fadein,R.layout.fadeout);
 				
 			}
@@ -27,8 +30,6 @@ public class SplashActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.splash, menu);
 		return true;
 	}
 
