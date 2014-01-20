@@ -22,7 +22,7 @@ public class DCEngine {
 
 		Intent playBkgMusic = new Intent(context, GameMusic.class);
 		context.stopService(playBkgMusic);
-		musicThread.stop();
+		musicThread.stop(); // idk what to do about this
 		
 	}
 	

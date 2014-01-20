@@ -32,9 +32,6 @@ public class MainActivity extends FragmentActivity {
 		// Thread code is defined above. Thread code is executed with start();
 		DCEngine.musicThread.start();
 		
-		// create an instance of the game engine
-		final DCEngine engine = new DCEngine();
-		
 		// initialize play and exit buttons
 		play = (ImageButton) findViewById(R.id.play_button);
 		exit = (ImageButton) findViewById(R.id.exit_button);
@@ -49,9 +46,9 @@ public class MainActivity extends FragmentActivity {
 		// to move to game state
 		play.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				setFragment(new GameFragment());
-				play.setVisibility(View.GONE);
-				exit.setVisibility(View.GONE);
+				Intent gameStart = new Intent (MainActivity.this, Game.class);
+				startActivity(gameStart);
+				MainActivity.this.finish();
 			}
 		});
 		
