@@ -33,7 +33,7 @@
         </service>
 
         <activity
-            android:name="com.main.dotcolonies.Game"
+            android:name="com.main.dotcolonies.game.Game"
             android:label="@string/title_activity_game" >
         </activity>
     </application>

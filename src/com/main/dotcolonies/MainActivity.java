@@ -1,5 +1,7 @@
 package com.main.dotcolonies;
 
+import com.main.dotcolonies.game.Game;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
