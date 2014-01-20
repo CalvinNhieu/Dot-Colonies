@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<alpha xmlns:android="http://schemad.android.com/apl/res/android"
+    android:interpolator="@android:anim/accelerate_interpolator"
+    android:duration="2000"
+    android:fromAlpha="1.0"
+    android:toAlpha="0.0"/>
