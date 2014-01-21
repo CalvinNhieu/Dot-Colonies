@@ -16,6 +16,7 @@ public class DCEngine {
 	public static final boolean LOOP_BKG_MUSIC = true;
 	public static Context context;
 	public static Thread musicThread;
+	public static final int BACKGROUND_LAYER = R.drawable.gamebkg;
 	
 	// housekeeping ... cleans up when app is exited
 	public void onExit (View v) {

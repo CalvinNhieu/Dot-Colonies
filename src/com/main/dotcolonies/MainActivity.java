@@ -1,17 +1,15 @@
 package com.main.dotcolonies;
 
-import com.main.dotcolonies.game.Game;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 
-public class MainActivity extends FragmentActivity {
+import com.main.dotcolonies.game.Game;
+
+public class MainActivity extends Activity {
 	
 	// declare buttons on main menu
 	private ImageButton play;
@@ -62,13 +60,6 @@ public class MainActivity extends FragmentActivity {
 				android.os.Process.killProcess(pid);
 			}
 		});
-	}
-	
-	// to change fragments
-	public void setFragment(Fragment f) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.container,f);
-		ft.commit();
 	}
 	
 	@Override

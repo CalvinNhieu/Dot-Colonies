@@ -1,5 +1,6 @@
 package com.main.dotcolonies.game;
 
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -21,15 +22,4 @@ public class Game extends Activity {
 	}
 
 	
-	@Override
-	public void onPause () {
-		super.onPause();
-		gView.onPause();
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		gView.onResume();
-	}
 }

@@ -3,14 +3,18 @@ package com.main.dotcolonies.game;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.main.dotcolonies.DCEngine;
+
 import android.opengl.GLSurfaceView.Renderer;
 
 public class GameRenderer implements Renderer{
 	
+	private GameBackground background = new GameBackground();
+	
 	// constantly called
 	@Override
 	public void onDrawFrame(GL10 gl) {
-		
+		background.draw(gl);
 	}
 	
 	// is called when created
@@ -51,6 +55,9 @@ public class GameRenderer implements Renderer{
 		
 		// THE PROCESSOR (sounds important)
 		gl.glOrthof(0f, 1f, 0f, 1f, -1f, 1f);
+		
+		//load and draw background texture
+		background.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);
 	}
 
 }
