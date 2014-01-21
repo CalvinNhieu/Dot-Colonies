@@ -14,6 +14,7 @@ public class DCEngine {
 	public static final int R_VOLUME = 100;
 	public static final int L_VOLUME = 100;
 	public static final boolean LOOP_BKG_MUSIC = true;
+	public static final int GAME_THREAD_FPS_SLEEP = (1000/60);
 	public static Context context;
 	public static Thread musicThread;
 	public static final int BACKGROUND_LAYER = R.drawable.gamebkg;

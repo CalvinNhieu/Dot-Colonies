@@ -14,6 +14,16 @@ public class GameRenderer implements Renderer{
 	// constantly called
 	@Override
 	public void onDrawFrame(GL10 gl) {
+		try {
+			Thread.sleep(DCEngine.GAME_THREAD_FPS_SLEEP);
+		} catch (InterruptedException e) { 
+			e.printStackTrace();
+		}
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+		
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE);
+		
 		background.draw(gl);
 	}
 	
