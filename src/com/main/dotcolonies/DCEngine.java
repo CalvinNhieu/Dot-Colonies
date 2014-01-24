@@ -18,6 +18,7 @@ public class DCEngine {
 	public static Context context;
 	public static Thread musicThread;
 	public static final int BACKGROUND_LAYER = R.drawable.gamebkg;
+	public static int dotRenderState = 0;
 	
 	// housekeeping ... cleans up when app is exited
 	public void onExit (View v) {

@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Intent gameStart = new Intent (MainActivity.this, Game.class);
 				startActivity(gameStart);
-				MainActivity.this.finish();
+				//MainActivity.this.finish();
 			}
 		});
 		
