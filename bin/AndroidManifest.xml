@@ -3,10 +3,20 @@
     package="com.main.dotcolonies"
     android:versionCode="1"
     android:versionName="1.0" >
-
-    <uses-sdk
+    
+     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
+    
+    <uses-permission
+        android:required="true"
+        android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission
+        android:required="true"
+        android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission
+        android:required="true"
+        android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
