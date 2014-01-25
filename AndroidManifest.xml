@@ -36,6 +36,10 @@
             android:name="com.main.dotcolonies.game.Game"
             android:label="@string/title_activity_game" >
         </activity>
+        <activity
+            android:name="com.main.dotcolonies.multiplayer.NetworkActivity"
+            >
+        </activity>
     </application>
 
 </manifest>

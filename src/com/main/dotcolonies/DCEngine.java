@@ -31,8 +31,8 @@ public class DCEngine {
 	public static float playerPosY_ = playerPosY; // post instance of player ypos for bezier curve implementation
 	public static float targetX = playerPosX; // player's target (moving towards) X	
 	public static float targetY = playerPosY; // player's target (moving towards) Y
-	public static final float acceleration = 0.05f; // player's acceleration value
-	public static final float lag = 0.85f; // to provide a smoother movement
+	public static final float acceleration = 0.03f; // player's acceleration value
+	public static final float lag = 0.94f; // to provide a smoother movement
 	public static float distance = 0; // distance from player to target
 	public static float SCROLL_BACKGROUND_1 = 0.001f; // speed at which background 1 will scroll
 	public static float SCROLL_BACKGROUND_2 = -0.00075f; // speed at which background 2 will scroll

@@ -6,8 +6,8 @@
     <string name="splash_descrip">Image displayed on splash screen</string>
     <string name="pbutt_descrip">The play button</string>
     <string name="exbutt_descrip">The exit button</string>
+    <string name="multibutt_descrip">The multiplayer button</string>
     <string name="splash_text">A Nhieu ting yow.</string>
     <string name="title_activity_game">Game</string>
-    <string name="hello_world">Hello world!</string>
 
 </resources>

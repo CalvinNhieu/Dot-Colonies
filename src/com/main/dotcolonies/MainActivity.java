@@ -8,12 +8,14 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.main.dotcolonies.game.Game;
+import com.main.dotcolonies.multiplayer.NetworkActivity;
 
 public class MainActivity extends Activity {
 	
 	// declare buttons on main menu
 	private ImageButton play;
 	private ImageButton exit;
+	private ImageButton multiplay;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class MainActivity extends Activity {
 		// initialize play and exit buttons
 		play = (ImageButton) findViewById(R.id.play_button);
 		exit = (ImageButton) findViewById(R.id.exit_button);
+		multiplay = (ImageButton) findViewById(R.id.multiplay_button);
 		
 		// Set transparency and no vibrate on click
 		play.getBackground().setAlpha(DCEngine.MENU_BUTTON_ALPHA);
@@ -42,6 +45,9 @@ public class MainActivity extends Activity {
 		
 		exit.getBackground().setAlpha(DCEngine.MENU_BUTTON_ALPHA);
 		exit.setHapticFeedbackEnabled(DCEngine.HAPTIC_BUTTON_FEEDBACK);
+		
+		multiplay.getBackground().setAlpha(DCEngine.MENU_BUTTON_ALPHA);
+		multiplay.setHapticFeedbackEnabled(DCEngine.HAPTIC_BUTTON_FEEDBACK);
 		
 		// to move to game state
 		play.setOnClickListener(new View.OnClickListener(){
@@ -52,6 +58,15 @@ public class MainActivity extends Activity {
 			}
 		});
 		
+		// to go to multiplayer state
+		multiplay.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v) {
+				Intent toMulti = new Intent (MainActivity.this, NetworkActivity.class);
+				startActivity(toMulti);
+				//MainActivity.this.finish();
+				}
+			});
+		
 		// to exit app
 		exit.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -60,6 +75,7 @@ public class MainActivity extends Activity {
 				android.os.Process.killProcess(pid);
 			}
 		});
+		
 	}
 	
 	@Override

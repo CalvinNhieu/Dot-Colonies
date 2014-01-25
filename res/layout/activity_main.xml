@@ -24,5 +24,16 @@
         android:layout_height="wrap_content"
         android:src="@drawable/startselector">
         </ImageButton>
+           
+        
+        <ImageButton android:id="@+id/multiplay_button"
+            android:gravity="center"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/multibutt_descrip"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/startselector"/>
+       
     
 </RelativeLayout>
