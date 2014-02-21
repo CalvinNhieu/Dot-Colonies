@@ -18,19 +18,26 @@ public class Dot {
 	private FloatBuffer textureBuffer;
 	private ByteBuffer indexBuffer;
 	private int[] textures = new int [1];
+	private float xPos;// starting dot xpos
+	private float yPos;// starting dot ypos
+	private float xPos_; // post instance of dot xpos for bezier curve implementation
+	private float yPos_; // post instance of dot ypos for bezier curve implementation
+	private float xTarget; // dot's target (moving towards) X	
+	private float yTarget; // dot's target (moving towards) Y
+	private float distance;// dot's distance from target
 	
 	private float vertices[] = {
 			0.0f,0.0f,0.0f,
-			1.0f,0.0f,0.0f,
-			1.0f,1.0f,0.0f,
-			0.0f,1.0f,0.0f,
+			0.2f,0.0f,0.0f,
+			0.2f,0.2f,0.0f,
+			0.0f,0.2f,0.0f,
 	};
 	
 	private float texture[] = {
 			0.0f, 0.0f,
-			0.25f, 0.0f,
-			0.25f,0.25f,
-			0.0f,0.25f,
+			1f, 0.0f,
+			1f,1f,
+			0.0f,1f,
 	};
 	
 	private byte indices[] = {
@@ -39,6 +46,14 @@ public class Dot {
 	};
 	
 	public Dot () {
+		xPos = 19.0f;
+		yPos = 27.0f;
+		xPos_ = xPos;
+		yPos_ = yPos;
+		xTarget = xPos;
+		yTarget = yPos;
+		distance = 0;
+		
 		ByteBuffer byteBuff = ByteBuffer.allocateDirect(vertices.length*4);
 		byteBuff.order(ByteOrder.nativeOrder());
 		vertexBuffer = byteBuff.asFloatBuffer();
@@ -57,7 +72,8 @@ public class Dot {
 	}
 	
 	public void draw(GL10 gl) {
-gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+		
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 		
 		gl.glFrontFace(GL10.GL_CCW);
 		gl.glEnable(GL10.GL_CULL_FACE);
@@ -105,6 +121,120 @@ gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
 		
 		bitmap.recycle();
 	}
+
+	public FloatBuffer getVertexBuffer() {
+		return vertexBuffer;
+	}
+
+	public void setVertexBuffer(FloatBuffer vertexBuffer) {
+		this.vertexBuffer = vertexBuffer;
+	}
+
+	public FloatBuffer getTextureBuffer() {
+		return textureBuffer;
+	}
+
+	public void setTextureBuffer(FloatBuffer textureBuffer) {
+		this.textureBuffer = textureBuffer;
+	}
+
+	public ByteBuffer getIndexBuffer() {
+		return indexBuffer;
+	}
+
+	public void setIndexBuffer(ByteBuffer indexBuffer) {
+		this.indexBuffer = indexBuffer;
+	}
+
+	public int[] getTextures() {
+		return textures;
+	}
+
+	public void setTextures(int[] textures) {
+		this.textures = textures;
+	}
+
+	public float getxPos() {
+		return xPos;
+	}
+
+	public void setxPos(float xPos) {
+		this.xPos = xPos;
+	}
+
+	public float getyPos() {
+		return yPos;
+	}
+
+	public void setyPos(float yPos) {
+		this.yPos = yPos;
+	}
+
+	public float getxPos_() {
+		return xPos_;
+	}
+
+	public void setxPos_(float xPos_) {
+		this.xPos_ = xPos_;
+	}
+
+	public float getyPos_() {
+		return yPos_;
+	}
+
+	public void setyPos_(float yPos_) {
+		this.yPos_ = yPos_;
+	}
+
+	public float getxTarget() {
+		return xTarget;
+	}
+
+	public void setxTarget(float xTarget) {
+		this.xTarget = xTarget;
+	}
+
+	public float getyTarget() {
+		return yTarget;
+	}
+
+	public void setyTarget(float yTarget) {
+		this.yTarget = yTarget;
+	}
+
+	public float[] getVertices() {
+		return vertices;
+	}
+
+	public void setVertices(float[] vertices) {
+		this.vertices = vertices;
+	}
+
+	public float[] getTexture() {
+		return texture;
+	}
+
+	public void setTexture(float[] texture) {
+		this.texture = texture;
+	}
+
+	public byte[] getIndices() {
+		return indices;
+	}
+
+	public void setIndices(byte[] indices) {
+		this.indices = indices;
+	}
+	
+	public float getDistance() {
+		return distance;
+	}
+	
+	public void setDistance(float distance) {
+		this.distance = distance;
+	}
+	
+	
 }
 
 

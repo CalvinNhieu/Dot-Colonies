@@ -1,5 +1,7 @@
 package com.main.dotcolonies;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -18,27 +20,48 @@ public class DCEngine {
 	public static Context context; // Context of the engine
 	public static Thread musicThread; // separate thread to run music player service
 	public static final int BACKGROUND_LAYER = R.drawable.gamebkg; // image to display as game bkg
-	public static int dotRenderState = 1; // for dot spinning animation
-	public static final int DOT_SPRITE_SHEET = R.drawable.mainsprites; // sprite for dot animations
-	public static final int DOT_POS_1 = 1; // dot animation state x4...
-	public static final int DOT_POS_2 = 2;
-	public static final int DOT_POS_3 = 3;
-	public static final int DOT_POS_4 = 4;
-	public static final int FRAMES_PER_ANIM = 2; // # of frames per spin animation update
-	public static float playerPosX = 19.0f; // starting dot xpos
-	public static float playerPosY = 27.0f; // starting dot ypos
-	public static float playerPosX_ = playerPosX; // post instance of player xpos for bezier curve implementation
-	public static float playerPosY_ = playerPosY; // post instance of player ypos for bezier curve implementation
-	public static float targetX = playerPosX; // player's target (moving towards) X	
-	public static float targetY = playerPosY; // player's target (moving towards) Y
-	public static final float acceleration = 0.03f; // player's acceleration value
-	public static final float lag = 0.94f; // to provide a smoother movement
-	public static float distance = 0; // distance from player to target
+	public static final int DOT_IMG = R.drawable.dot; // sprite for dot animations
+	public static final float acceleration = 0.015f; // player's acceleration value
+	public static final float lag = 0.93f; // to provide a smoother movement
 	public static float SCROLL_BACKGROUND_1 = 0.001f; // speed at which background 1 will scroll
 	public static float SCROLL_BACKGROUND_2 = -0.00075f; // speed at which background 2 will scroll
 	public static final float X_SCALE = 54.0f; // scale value from android canvas to OpenGL
 	public static final float Y_SCALE = 64.54f; // scale value from android canvas to OpenGL
 	public static final float Y_CANVAS_MAX = 1775.0f; // android canvas y max value
+	public static final ArrayList<Dot> dotContainer = new ArrayList<Dot>(); // contains all the dots
+	
+	// BEZIER CURVE METHODS
+		private static void pushDot(Dot d) {
+			d.setDistance(hypotenuse(d));
+			d.setxPos(d.getxPos() + acceleration*((d.getxTarget()-d.getxPos())/d.getDistance()));
+			d.setyPos(d.getyPos() + acceleration*((d.getyTarget()-d.getyPos())/d.getDistance()));
+		}
+		
+		private static float hypotenuse(Dot d) { // calculates hypotenuse of a triangle
+			return (float) (Math.sqrt((d.getxPos()-d.getxTarget())*(d.getxPos()-d.getxTarget()) + (d.getyPos()-d.getyTarget())*(d.getyPos()-d.getyTarget())));
+		}
+		
+		public static void moveToTarget(Dot d) {
+			if (Math.abs(d.getxPos()-d.getxTarget())<0.001f &&Math.abs(d.getyPos()-d.getyTarget())<0.001f) {
+				d.setxPos(d.getxTarget()); 
+				d.setyPos(d.getyTarget());
+				d.setxPos_(d.getxPos());
+				d.setyPos_(d.getyPos());
+			}
+			else {
+				pushDot(d);
+			}
+		}
+		
+		public static void moveDot(Dot d) {
+			float x_temp = d.getxPos();
+			float y_temp = d.getyPos();
+			d.setxPos(d.getxPos() + ((d.getxPos() - d.getxPos_())*lag));
+			d.setyPos(d.getyPos() + ((d.getyPos() - d.getyPos_())*lag));
+			d.setxPos_(x_temp);
+			d.setyPos_(y_temp);
+		}
+		// BEZIER CURVES METHODS END
 	
 	// housekeeping ... cleans up when app is exited
 	public void onExit (View v) {

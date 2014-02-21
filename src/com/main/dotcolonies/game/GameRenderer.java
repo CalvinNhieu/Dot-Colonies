@@ -8,14 +8,13 @@ import android.opengl.GLSurfaceView.Renderer;
 import com.main.dotcolonies.DCEngine;
 import com.main.dotcolonies.Dot;
 
+
+
 // GAME LOGIC CLASS
 public class GameRenderer implements Renderer{
 	
 	private GameBackground background_layer_1 = new GameBackground(); // background instance 1
 	private GameBackground background_layer_2 = new GameBackground(); // background instance 2 for layering effect
-	
-	private Dot dot = new Dot(); // create a new dot. The player
-	private int frameCounter = 0; // to control animation rates
 	
 	private float bkgScroll1; // instance to hold background pos
 	private float bkgScroll2; // instance to hold background pos
@@ -70,81 +69,31 @@ public class GameRenderer implements Renderer{
 		gl.glLoadIdentity(); // resets matrix mode settings
 	}
 	
-	
-	// BEZIER CURVE METHODS
-	private void pushDot() {
-		DCEngine.distance = hypotenuse();
-		DCEngine.playerPosX += DCEngine.acceleration*((DCEngine.targetX-DCEngine.playerPosX)/DCEngine.distance);
-		DCEngine.playerPosY += DCEngine.acceleration*((DCEngine.targetY-DCEngine.playerPosY)/DCEngine.distance);
-	}
-	
-	private float hypotenuse() { // calculates hypotenuse of a triangle
-		return (float) (Math.sqrt((DCEngine.playerPosX-DCEngine.targetX)*(DCEngine.playerPosX-DCEngine.targetX) + (DCEngine.playerPosY-DCEngine.targetY)*(DCEngine.playerPosY-DCEngine.targetY)));
-	}
-	
-	private void moveToTarget() {
-		if (Math.abs(DCEngine.playerPosX-DCEngine.targetX)<0.05f &&Math.abs(DCEngine.playerPosY-DCEngine.targetY)<0.05f) {
-			DCEngine.playerPosX_ = DCEngine.playerPosX = DCEngine.targetX;
-			DCEngine.playerPosY_ = DCEngine.playerPosY = DCEngine.targetY;
-		}
-		else {
-			pushDot();
-		}
-	}
-	
-	private void moveDot() {
-		float x_temp = DCEngine.playerPosX;
-		float y_temp = DCEngine.playerPosY;
-		DCEngine.playerPosX += (DCEngine.playerPosX - DCEngine.playerPosX_)*DCEngine.lag;
-		DCEngine.playerPosY += (DCEngine.playerPosY - DCEngine.playerPosY_)*DCEngine.lag;
-		DCEngine.playerPosX_ = x_temp;
-		DCEngine.playerPosY_ = y_temp;
-	}
-	// BEZIER CURVES METHODS END
-	
 	// update player's values
-	private void updateDot (GL10 gl) {
-		moveToTarget();
-		moveDot();
+	private void updateDots (GL10 gl) {
+		System.out.println("X: " + DCEngine.dotContainer.get(0).getxPos() + " Y: " + DCEngine.dotContainer.get(0).getxPos());
+		for (int i=0;i<DCEngine.dotContainer.size();i++) {
+			DCEngine.moveToTarget(DCEngine.dotContainer.get(i));
+			DCEngine.moveDot(DCEngine.dotContainer.get(i));
+		}
 	}
 	
 	// prepare and draw player's 
 	// dot texture based on
 	// animation states based on
 	// frame count
-	private void drawDot(GL10 gl) {
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		gl.glPushMatrix();
-		gl.glScalef(0.05f,0.035f,1f);
-		gl.glTranslatef(DCEngine.playerPosX,DCEngine.playerPosY,0f);
-		gl.glMatrixMode(GL10.GL_TEXTURE);
-		gl.glLoadIdentity();
-		switch (DCEngine.dotRenderState) {
-		case DCEngine.DOT_POS_1:
-			gl.glTranslatef(0.0f,0.0f,0.0f);
-			break;
-		case DCEngine.DOT_POS_2:
-			gl.glTranslatef(0.25f,0.0f,0.0f);
-			break;
-		case DCEngine.DOT_POS_3:
-			gl.glTranslatef(0.5f,0.0f,0.0f);
-			break;
-		case DCEngine.DOT_POS_4:
-			gl.glTranslatef(0.75f,0.0f,0.0f);
-			break;
-		}
-		dot.draw(gl);
-		gl.glPopMatrix();
-		gl.glLoadIdentity();
-		frameCounter++;
-		
-		if (frameCounter==DCEngine.FRAMES_PER_ANIM) {
-			frameCounter = 0;
-			DCEngine.dotRenderState++;
-			if (DCEngine.dotRenderState == 5) {
-				DCEngine.dotRenderState = 1;
-			}
+	private void drawDots(GL10 gl) {
+		for (int i=0;i<DCEngine.dotContainer.size();i++) {
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(0.05f,0.035f,1f);
+			gl.glTranslatef(DCEngine.dotContainer.get(i).getxPos(),DCEngine.dotContainer.get(i).getyPos(),0f);
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			DCEngine.dotContainer.get(i).draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
 		}
 	}
 	
@@ -160,10 +109,10 @@ public class GameRenderer implements Renderer{
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); // must be called before transforming and rendering matrices?
 		
 		// BEGIN GAME LOGIC
-		updateDot(gl);
-		drawDot(gl);
-		scrollBackground1(gl);
-		scrollBackground2(gl);
+		updateDots(gl);
+		drawDots(gl);
+		//scrollBackground1(gl);
+		//scrollBackground2(gl);
 		
 	}
 	
@@ -207,10 +156,12 @@ public class GameRenderer implements Renderer{
 		gl.glOrthof(0f, 1f, 0f, 1f, -1f, 1f);
 		
 		//load and draw background_layer_1 texture
+		
+		DCEngine.dotContainer.add(new Dot());
+		
 		background_layer_1.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);
 		background_layer_2.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);
 		
-		dot.loadTexture(gl, DCEngine.DOT_SPRITE_SHEET, DCEngine.context);
+		DCEngine.dotContainer.get(0).loadTexture(gl, DCEngine.DOT_IMG, DCEngine.context);
 	}
-
 }
