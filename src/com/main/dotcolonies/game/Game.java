@@ -26,8 +26,8 @@ public class Game extends Activity {
 	// store in engine
 	@Override
 	public boolean onTouchEvent (MotionEvent event) {
-		DCEngine.dotContainer.get(0).setxTarget(event.getX()/DCEngine.X_SCALE);
-		DCEngine.dotContainer.get(0).setyTarget((DCEngine.Y_CANVAS_MAX - event.getY())/DCEngine.Y_SCALE);
+		DCEngine.dotContainer.get(0).setxTarget(event.getX());
+		DCEngine.dotContainer.get(0).setyTarget((DCEngine.Y_MAX - event.getY()));
 		
 		return false;
 	}

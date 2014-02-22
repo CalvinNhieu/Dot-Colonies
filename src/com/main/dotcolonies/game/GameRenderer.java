@@ -3,18 +3,18 @@ package com.main.dotcolonies.game;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Context;
+import android.graphics.Point;
 import android.opengl.GLSurfaceView.Renderer;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.main.dotcolonies.DCEngine;
-import com.main.dotcolonies.Dot;
-
-
 
 // GAME LOGIC CLASS
 public class GameRenderer implements Renderer{
 	
 	private GameBackground background_layer_1 = new GameBackground(); // background instance 1
-	private GameBackground background_layer_2 = new GameBackground(); // background instance 2 for layering effect
 	
 	private float bkgScroll1; // instance to hold background pos
 	private float bkgScroll2; // instance to hold background pos
@@ -63,19 +63,10 @@ public class GameRenderer implements Renderer{
 		gl.glLoadIdentity();
 		gl.glTranslatef(-bkgScroll2,bkgScroll2,0.0f); // setting scrolling transformations
 		
-		background_layer_2.draw(gl); // renders background_layer_1 texture to screen
+		background_layer_1.draw(gl); // renders background_layer_1 texture to screen
 		gl.glPopMatrix(); // pops matrix WITH SCROLLING TRANSFORMATIONS back onto the stack to be rendered or some shit
 		bkgScroll2 += DCEngine.SCROLL_BACKGROUND_2; // what the fuck is this some simple math i am not comprehending
 		gl.glLoadIdentity(); // resets matrix mode settings
-	}
-	
-	// update player's values
-	private void updateDots (GL10 gl) {
-		System.out.println("X: " + DCEngine.dotContainer.get(0).getxPos() + " Y: " + DCEngine.dotContainer.get(0).getxPos());
-		for (int i=0;i<DCEngine.dotContainer.size();i++) {
-			DCEngine.moveToTarget(DCEngine.dotContainer.get(i));
-			DCEngine.moveDot(DCEngine.dotContainer.get(i));
-		}
 	}
 	
 	// prepare and draw player's 
@@ -87,13 +78,43 @@ public class GameRenderer implements Renderer{
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			gl.glPushMatrix();
-			gl.glScalef(0.05f,0.035f,1f);
-			gl.glTranslatef(DCEngine.dotContainer.get(i).getxPos(),DCEngine.dotContainer.get(i).getyPos(),0f);
+			gl.glScalef(1f,1f,1f);
+			gl.glTranslatef(DCEngine.dotContainer.get(i).getxPos()/DCEngine.X_MAX,DCEngine.dotContainer.get(i).getyPos()/DCEngine.Y_MAX,0f);
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
-			DCEngine.dotContainer.get(i).draw(gl);
+			DCEngine.dotContainer.get(0).draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
+		}
+	}
+	
+	private void drawColonies(GL10 gl) {
+		for (int i=0;i<DCEngine.colonyContainer.size();i++) {
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glPushMatrix();
+			gl.glScalef(1f,1f,1f);
+			gl.glTranslatef(DCEngine.colonyContainer.get(i).getX()/DCEngine.X_MAX,DCEngine.colonyContainer.get(i).getY()/DCEngine.Y_MAX,0f);
+			gl.glMatrixMode(GL10.GL_TEXTURE);
+			gl.glLoadIdentity();
+			DCEngine.colonyContainer.get(0).draw(gl);
+			gl.glPopMatrix();
+			gl.glLoadIdentity();
+		}
+	}
+	
+	private void updateDotBehaviour(boolean indicator) {
+		System.out.println(indicator);
+	}
+	
+	// update player's values
+	private void updateDots (GL10 gl) {
+		for (int i=0;i<DCEngine.dotContainer.size();i++) {
+			
+			updateDotBehaviour(DCEngine.contains(DCEngine.colonyContainer, DCEngine.dotContainer.get(i)));
+			
+			DCEngine.moveToTarget(DCEngine.dotContainer.get(i));
+			DCEngine.moveDot(DCEngine.dotContainer.get(i));
 		}
 	}
 	
@@ -110,7 +131,9 @@ public class GameRenderer implements Renderer{
 		
 		// BEGIN GAME LOGIC
 		updateDots(gl);
+		
 		drawDots(gl);
+		drawColonies(gl);
 		//scrollBackground1(gl);
 		//scrollBackground2(gl);
 		
@@ -155,13 +178,20 @@ public class GameRenderer implements Renderer{
 		// THE PROCESSOR (sounds important)
 		gl.glOrthof(0f, 1f, 0f, 1f, -1f, 1f);
 		
-		//load and draw background_layer_1 texture
+		WindowManager wm = (WindowManager) DCEngine.context.getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		DCEngine.setSize(size.x, size.y);
 		
-		DCEngine.dotContainer.add(new Dot());
+		DCEngine.dotContainer.add(new Dot(0.95f*DCEngine.X_MAX,0.95f*DCEngine.Y_MAX));
+		DCEngine.colonyContainer.add(new Colony(0.0f*DCEngine.X_MAX,0.0f*DCEngine.Y_MAX));
+		DCEngine.colonyContainer.add(new Colony(0.5f*DCEngine.X_MAX,0.5f*DCEngine.Y_MAX));
 		
+		// LOAD TEXTURES
 		background_layer_1.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);
-		background_layer_2.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);
 		
 		DCEngine.dotContainer.get(0).loadTexture(gl, DCEngine.DOT_IMG, DCEngine.context);
+		DCEngine.colonyContainer.get(0).loadTexture(gl, DCEngine.COLONY_UNSELECTED, DCEngine.context);
 	}
 }
