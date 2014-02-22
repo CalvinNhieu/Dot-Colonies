@@ -32,7 +32,6 @@ public class DCEngine {
 	public static final int GAME_THREAD_FPS_SLEEP = (1000/60); // value to output 60fps
 	public static Thread musicThread; // separate thread to run music player service
 	
-	
 	// IMAGES
 	public static final int BACKGROUND_LAYER = R.drawable.gamebkg; // image to display as game bkg
 	public static final int DOT_IMG = R.drawable.dot; // sprite for dot animations
@@ -45,15 +44,16 @@ public class DCEngine {
 	public static float SCROLL_BACKGROUND_2 = -0.00075f; // speed at which background 2 will scroll
 	public static final ArrayList<Dot> dotContainer = new ArrayList<Dot>(); // contains all the dots
 	public static final ArrayList<Colony> colonyContainer = new ArrayList<Colony>(); // contains all colonies
+	public static int selectedColonyIndex = -1; // index of the currently selected colony (-1 means none selected)
 	
 	// see if a coordinate is contained in a colony
 	public static boolean contains (ArrayList<Colony> c, float x, float y) {
 		boolean contained = false;
 		for (int i=0;i<c.size();i++) {
-			float centerX = c.get(i).getX() + c.get(i).getRadius(); // coordinates of the center of the colony
-			float centerY = c.get(i).getY() + c.get(i).getRadius();
+			float centerX = c.get(i).getX() + Colony.getRadius(); // coordinates of the center of the colony
+			float centerY = c.get(i).getY() + Colony.getRadius();
 			float distanceFromCenter = hypotenuse(x, y, centerX, centerY); // calculate distance between dot and center
-			if(distanceFromCenter <= c.get(i).getRadius()) contained = true; // true if dot is inside
+			if(distanceFromCenter <= Colony.getRadius()) contained = true; // true if dot is inside
 		}
 		return contained;
 	}
@@ -62,9 +62,42 @@ public class DCEngine {
 	public static Colony whichContains (ArrayList<Colony> c, float x, float y) {
 		for (int i=0;i<c.size();i++) {
 			float distanceFromCenter = hypotenuse(x, y, c.get(i).getCenterX(), c.get(i).getCenterY()); // calculate distance between dot and center
-			if(distanceFromCenter <= c.get(i).getRadius()) return c.get(i); // true if dot is inside
+			if(distanceFromCenter <= Colony.getRadius()) return c.get(i); // true if dot is inside
 		}
 		return null;
+	}
+	
+	// checks if any colonies are currently selected
+	public static boolean isColonySelected () {
+		for (int i=0;i<colonyContainer.size();i++) {
+			if (colonyContainer.get(i).isSelected()) {
+				selectedColonyIndex = i;
+				return true;
+			}
+		}
+		selectedColonyIndex = -1;
+		return false;
+	}
+	
+	// method to check and reset dots to dormant behaviour (upon reentering target colony)
+	public static void checkForReEntry (Dot d) {
+		if (hypotenuse(d.getxPos(), d.getyPos(), colonyContainer.get(d.getTargetColonyIndex()).getCenterX(), colonyContainer.get(d.getTargetColonyIndex()).getCenterY()) <= Colony.getRadius()) {
+			d.setParentColonyIndex(d.getTargetColonyIndex());
+			d.setTargetColonyIndex(-1);
+			d.setLive(false);
+		}
+	}
+	
+	// HOW THE DOT BEHAVES WITHIN A COLONY
+	public static void dormantDotBehaviour (Dot d) {
+		Colony containingColony = whichContains(colonyContainer, d.getxPos(), d.getyPos()); // is the colony dot is inside
+		float dist = hypotenuse(d.getxPos(),d.getyPos(),containingColony.getCenterX(),containingColony.getCenterY()); // distance from dot and colony's center
+		if (dist > (Colony.getRadius()-80)) { // if dot is nearing the edge
+			
+			double theta = Math.random()*2.0*Math.PI; // calculate a random angle 
+			d.setxTarget((float) (Colony.getRadius()*Math.cos(theta)) + containingColony.getCenterX()); // redirect dot's target to random point on colony's edge
+			d.setyTarget((float) (Colony.getRadius()*Math.sin(theta)) + containingColony.getCenterY());
+		}
 	}
 	
 	// BEZIER CURVE METHODS

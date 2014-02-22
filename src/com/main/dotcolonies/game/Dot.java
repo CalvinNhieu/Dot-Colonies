@@ -25,6 +25,9 @@ public class Dot {
 	private float xTarget; // dot's target (moving towards) X	
 	private float yTarget; // dot's target (moving towards) Y
 	private float distance;// dot's distance from target
+	private boolean live; // if dot is being moved or not
+	private int parentColonyIndex; // index of colony dot resides in (-1 if dot is live)
+	private int targetColonyIndex; // index of colony dot is currently moving to (-1 if dormant)
 	
 	private float vertices[] = {
 			0.0f,0.0f,0.0f,
@@ -53,6 +56,9 @@ public class Dot {
 		xTarget = xPos;
 		yTarget = yPos;
 		distance = 0;
+		live = false;
+		parentColonyIndex = 1;
+		targetColonyIndex = -1;
 		
 		ByteBuffer byteBuff = ByteBuffer.allocateDirect(vertices.length*4);
 		byteBuff.order(ByteOrder.nativeOrder());
@@ -232,6 +238,30 @@ public class Dot {
 	
 	public void setDistance(float distance) {
 		this.distance = distance;
+	}
+
+	public boolean isLive() {
+		return live;
+	}
+
+	public void setLive(boolean live) {
+		this.live = live;
+	}
+
+	public int getParentColonyIndex() {
+		return parentColonyIndex;
+	}
+
+	public void setParentColonyIndex(int parentColonyIndex) {
+		this.parentColonyIndex = parentColonyIndex;
+	}
+
+	public int getTargetColonyIndex() {
+		return targetColonyIndex;
+	}
+
+	public void setTargetColonyIndex(int targetColonyIndex) {
+		this.targetColonyIndex = targetColonyIndex;
 	}
 	
 	

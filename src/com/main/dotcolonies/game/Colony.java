@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -14,7 +15,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
 public class Colony {
-	private final float radius = 170.0f;
+	private static final float radius = 170.0f;
 	
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer textureBuffer;
@@ -25,6 +26,7 @@ public class Colony {
 	private float centerX;
 	private float centerY;
 	private boolean selected;
+	private int index;
 	
 	// loading only 1 background texture...
 	private int[] textures = new int[1];
@@ -58,9 +60,10 @@ public class Colony {
 			0,2,3,
 	};
 	
-	public Colony(float x, float y){
+	public Colony(float x, float y, int index){
 		this.x = x;
 		this.y = y;
+		this.index = index;
 		centerX = x+radius;
 		centerY = y+radius;
 		
@@ -149,7 +152,7 @@ public class Colony {
 		this.y = y;
 	}
 
-	public float getRadius() {
+	public static float getRadius() {
 		return radius;
 	}
 
@@ -175,6 +178,14 @@ public class Colony {
 
 	public void setCenterY(float centerY) {
 		this.centerY = centerY;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 	
 	

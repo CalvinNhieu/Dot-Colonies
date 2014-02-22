@@ -16,58 +16,58 @@ public class GameRenderer implements Renderer{
 	
 	private GameBackground background_layer_1 = new GameBackground(); // background instance 1
 	
-	private float bkgScroll1; // instance to hold background pos
-	private float bkgScroll2; // instance to hold background pos
+//	private float bkgScroll1; // instance to hold background pos
+//	private float bkgScroll2; // instance to hold background pos
 	
 	// apply opengl matrix transformations to
 	// background 1 texture
 	// draw texture
-	private void scrollBackground1(GL10 gl) {
-		if (bkgScroll1 == Float.MAX_VALUE) {
-			bkgScroll1 = 0f;
-		}
-		gl.glMatrixMode(GL10.GL_MODELVIEW); // set matrix mode to manipulate VERTICES (view)
-		gl.glLoadIdentity(); // Resets the matrix ( but to what? )
-		gl.glPushMatrix(); // push the matrix off the stack to manipulate individual vertices and not all...
-		gl.glScalef(1f, 1f, 1f); // Default scale params (original size, 100%)
-		gl.glTranslatef(0f,0f,0f); // Default translate params  (no movement)
-		//I THINK THE ABOVE 5 LINES SET THE VERTICES TO A FIXED POSITION...
-		//SO THAT THE TRANSLATION OF THE TEXTURE POINTS DOESN'T GET AFFECTED?
-		
-		gl.glMatrixMode(GL10.GL_TEXTURE);
-		gl.glLoadIdentity();
-		gl.glTranslatef(bkgScroll1,bkgScroll1,0.0f); // setting scrolling transformations
-		
-		background_layer_1.draw(gl); // renders background_layer_1 texture to screen
-		gl.glPopMatrix(); // pops matrix WITH SCROLLING TRANSFORMATIONS back onto the stack to be rendered or some shit
-		bkgScroll1 += DCEngine.SCROLL_BACKGROUND_1; // what the fuck is this some simple math i am not comprehending
-		gl.glLoadIdentity(); // resets matrix mode settings
-	}
-	
-	// apply opengl matrix transformations to
-		// background 2 texture
-		// draw texture
-	private void scrollBackground2(GL10 gl) {
-		if (bkgScroll2 == Float.MAX_VALUE) {
-			bkgScroll2 = 0f;
-		}
-		gl.glMatrixMode(GL10.GL_MODELVIEW); // set matrix mode to manipulate VERTICES (view)
-		gl.glLoadIdentity(); // Resets the matrix ( but to what? )
-		gl.glPushMatrix(); // push the matrix off the stack to manipulate individual vertices and not all...
-		gl.glScalef(1f, 1f, 1f); // Default scale params (original size, 100%)
-		gl.glTranslatef(0f,0f,0f); // Default translate params  (no movement)
-		//I THINK THE ABOVE 5 LINES SET THE VERTICES TO A FIXED POSITION...
-		//SO THAT THE TRANSLATION OF THE TEXTURE POINTS DOESN'T GET AFFECTED?
-		
-		gl.glMatrixMode(GL10.GL_TEXTURE);
-		gl.glLoadIdentity();
-		gl.glTranslatef(-bkgScroll2,bkgScroll2,0.0f); // setting scrolling transformations
-		
-		background_layer_1.draw(gl); // renders background_layer_1 texture to screen
-		gl.glPopMatrix(); // pops matrix WITH SCROLLING TRANSFORMATIONS back onto the stack to be rendered or some shit
-		bkgScroll2 += DCEngine.SCROLL_BACKGROUND_2; // what the fuck is this some simple math i am not comprehending
-		gl.glLoadIdentity(); // resets matrix mode settings
-	}
+//	private void scrollBackground1(GL10 gl) {
+//		if (bkgScroll1 == Float.MAX_VALUE) {
+//			bkgScroll1 = 0f;
+//		}
+//		gl.glMatrixMode(GL10.GL_MODELVIEW); // set matrix mode to manipulate VERTICES (view)
+//		gl.glLoadIdentity(); // Resets the matrix ( but to what? )
+//		gl.glPushMatrix(); // push the matrix off the stack to manipulate individual vertices and not all...
+//		gl.glScalef(1f, 1f, 1f); // Default scale params (original size, 100%)
+//		gl.glTranslatef(0f,0f,0f); // Default translate params  (no movement)
+//		//I THINK THE ABOVE 5 LINES SET THE VERTICES TO A FIXED POSITION...
+//		//SO THAT THE TRANSLATION OF THE TEXTURE POINTS DOESN'T GET AFFECTED?
+//		
+//		gl.glMatrixMode(GL10.GL_TEXTURE);
+//		gl.glLoadIdentity();
+//		gl.glTranslatef(bkgScroll1,bkgScroll1,0.0f); // setting scrolling transformations
+//		
+//		background_layer_1.draw(gl); // renders background_layer_1 texture to screen
+//		gl.glPopMatrix(); // pops matrix WITH SCROLLING TRANSFORMATIONS back onto the stack to be rendered or some shit
+//		bkgScroll1 += DCEngine.SCROLL_BACKGROUND_1; // what the fuck is this some simple math i am not comprehending
+//		gl.glLoadIdentity(); // resets matrix mode settings
+//	}
+//	
+//	// apply opengl matrix transformations to
+//		// background 2 texture
+//		// draw texture
+//	private void scrollBackground2(GL10 gl) {
+//		if (bkgScroll2 == Float.MAX_VALUE) {
+//			bkgScroll2 = 0f;
+//		}
+//		gl.glMatrixMode(GL10.GL_MODELVIEW); // set matrix mode to manipulate VERTICES (view)
+//		gl.glLoadIdentity(); // Resets the matrix ( but to what? )
+//		gl.glPushMatrix(); // push the matrix off the stack to manipulate individual vertices and not all...
+//		gl.glScalef(1f, 1f, 1f); // Default scale params (original size, 100%)
+//		gl.glTranslatef(0f,0f,0f); // Default translate params  (no movement)
+//		//I THINK THE ABOVE 5 LINES SET THE VERTICES TO A FIXED POSITION...
+//		//SO THAT THE TRANSLATION OF THE TEXTURE POINTS DOESN'T GET AFFECTED?
+//		
+//		gl.glMatrixMode(GL10.GL_TEXTURE);
+//		gl.glLoadIdentity();
+//		gl.glTranslatef(-bkgScroll2,bkgScroll2,0.0f); // setting scrolling transformations
+//		
+//		background_layer_1.draw(gl); // renders background_layer_1 texture to screen
+//		gl.glPopMatrix(); // pops matrix WITH SCROLLING TRANSFORMATIONS back onto the stack to be rendered or some shit
+//		bkgScroll2 += DCEngine.SCROLL_BACKGROUND_2; // what the fuck is this some simple math i am not comprehending
+//		gl.glLoadIdentity(); // resets matrix mode settings
+//	}
 	
 	// prepare and draw player's 
 	// dot texture based on
@@ -109,18 +109,24 @@ public class GameRenderer implements Renderer{
 		}
 	}
 	
-	private void updateDotBehaviour(boolean indicator) {
-		//System.out.println(indicator);
+	private void updateDotBehaviour(boolean indicator, Dot d) {
+		if (d.isLive()) {
+			DCEngine.checkForReEntry(d);
+		}
+		else if (!d.isLive()) {
+			DCEngine.dormantDotBehaviour(d);
+		}
 	}
 	
 	// update player's values
 	private void updateDots (GL10 gl) {
 		for (int i=0;i<DCEngine.dotContainer.size();i++) {
 			
-			updateDotBehaviour(DCEngine.contains(DCEngine.colonyContainer, DCEngine.dotContainer.get(i).getxPos(), DCEngine.dotContainer.get(i).getyPos()));
+			updateDotBehaviour(DCEngine.contains(DCEngine.colonyContainer, DCEngine.dotContainer.get(i).getxPos(), DCEngine.dotContainer.get(i).getyPos()), DCEngine.dotContainer.get(i));
 			
 			DCEngine.moveToTarget(DCEngine.dotContainer.get(i));
 			DCEngine.moveDot(DCEngine.dotContainer.get(i));
+
 		}
 	}
 	
@@ -163,6 +169,26 @@ public class GameRenderer implements Renderer{
 		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE);
 		
 		// add all textures here
+		WindowManager wm = (WindowManager) DCEngine.context.getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		DCEngine.setSize(size.x, size.y);
+		
+		// TEST DOTS
+		DCEngine.dotContainer.add(new Dot(0.55f*DCEngine.X_MAX,0.55f*DCEngine.Y_MAX));
+		DCEngine.dotContainer.add(new Dot(0.55f*DCEngine.X_MAX,0.55f*DCEngine.Y_MAX));
+		DCEngine.dotContainer.add(new Dot(0.55f*DCEngine.X_MAX,0.55f*DCEngine.Y_MAX));
+		DCEngine.dotContainer.add(new Dot(0.55f*DCEngine.X_MAX,0.55f*DCEngine.Y_MAX));
+		// TEST CONTAINERS
+		DCEngine.colonyContainer.add(new Colony(0.0f*DCEngine.X_MAX,0.0f*DCEngine.Y_MAX,0));
+		DCEngine.colonyContainer.add(new Colony(0.5f*DCEngine.X_MAX,0.5f*DCEngine.Y_MAX,1));
+		
+		// LOAD TEXTURES
+		background_layer_1.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);
+		
+		DCEngine.dotContainer.get(0).loadTexture(gl, DCEngine.DOT_IMG, DCEngine.context);
+		DCEngine.colonyContainer.get(0).loadTexture(gl, DCEngine.COLONY_SPRITESHEET, DCEngine.context);
 	}
 	
 	// is called on initial startup
@@ -183,21 +209,5 @@ public class GameRenderer implements Renderer{
 		
 		// THE PROCESSOR (sounds important)
 		gl.glOrthof(0f, 1f, 0f, 1f, -1f, 1f);
-		
-		WindowManager wm = (WindowManager) DCEngine.context.getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-		DCEngine.setSize(size.x, size.y);
-		
-		DCEngine.dotContainer.add(new Dot(0.95f*DCEngine.X_MAX,0.95f*DCEngine.Y_MAX));
-		DCEngine.colonyContainer.add(new Colony(0.0f*DCEngine.X_MAX,0.0f*DCEngine.Y_MAX));
-		DCEngine.colonyContainer.add(new Colony(0.5f*DCEngine.X_MAX,0.5f*DCEngine.Y_MAX));
-		
-		// LOAD TEXTURES
-		background_layer_1.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);
-		
-		DCEngine.dotContainer.get(0).loadTexture(gl, DCEngine.DOT_IMG, DCEngine.context);
-		DCEngine.colonyContainer.get(0).loadTexture(gl, DCEngine.COLONY_SPRITESHEET, DCEngine.context);
 	}
 }
