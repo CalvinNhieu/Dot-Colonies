@@ -97,6 +97,12 @@ public class GameRenderer implements Renderer{
 			gl.glTranslatef(DCEngine.colonyContainer.get(i).getX()/DCEngine.X_MAX,DCEngine.colonyContainer.get(i).getY()/DCEngine.Y_MAX,0f);
 			gl.glMatrixMode(GL10.GL_TEXTURE);
 			gl.glLoadIdentity();
+			if (DCEngine.colonyContainer.get(i).isSelected()) {
+				gl.glTranslatef(0.0f,0.0f,0.0f);
+			}
+			else {
+				gl.glTranslatef(0.5f,0.5f,0.0f);
+			}
 			DCEngine.colonyContainer.get(0).draw(gl);
 			gl.glPopMatrix();
 			gl.glLoadIdentity();
@@ -104,14 +110,14 @@ public class GameRenderer implements Renderer{
 	}
 	
 	private void updateDotBehaviour(boolean indicator) {
-		System.out.println(indicator);
+		//System.out.println(indicator);
 	}
 	
 	// update player's values
 	private void updateDots (GL10 gl) {
 		for (int i=0;i<DCEngine.dotContainer.size();i++) {
 			
-			updateDotBehaviour(DCEngine.contains(DCEngine.colonyContainer, DCEngine.dotContainer.get(i)));
+			updateDotBehaviour(DCEngine.contains(DCEngine.colonyContainer, DCEngine.dotContainer.get(i).getxPos(), DCEngine.dotContainer.get(i).getyPos()));
 			
 			DCEngine.moveToTarget(DCEngine.dotContainer.get(i));
 			DCEngine.moveDot(DCEngine.dotContainer.get(i));
@@ -192,6 +198,6 @@ public class GameRenderer implements Renderer{
 		background_layer_1.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);
 		
 		DCEngine.dotContainer.get(0).loadTexture(gl, DCEngine.DOT_IMG, DCEngine.context);
-		DCEngine.colonyContainer.get(0).loadTexture(gl, DCEngine.COLONY_UNSELECTED, DCEngine.context);
+		DCEngine.colonyContainer.get(0).loadTexture(gl, DCEngine.COLONY_SPRITESHEET, DCEngine.context);
 	}
 }

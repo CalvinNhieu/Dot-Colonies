@@ -26,8 +26,19 @@ public class Game extends Activity {
 	// store in engine
 	@Override
 	public boolean onTouchEvent (MotionEvent event) {
-		DCEngine.dotContainer.get(0).setxTarget(event.getX());
-		DCEngine.dotContainer.get(0).setyTarget((DCEngine.Y_MAX - event.getY()));
+		float X = (float) event.getX();
+		float Y = (float) (DCEngine.Y_MAX - event.getY());
+		
+		if (DCEngine.contains(DCEngine.colonyContainer, X, Y)) {
+			DCEngine.whichContains(DCEngine.colonyContainer, X, Y).setSelected(true);
+		}
+		else if (!DCEngine.contains(DCEngine.colonyContainer, X, Y)) {
+			DCEngine.dotContainer.get(0).setxTarget(X);
+			DCEngine.dotContainer.get(0).setyTarget(Y);
+			for (int i=0;i<DCEngine.colonyContainer.size();i++) {
+				DCEngine.colonyContainer.get(i).setSelected(false);
+			}
+		}
 		
 		return false;
 	}

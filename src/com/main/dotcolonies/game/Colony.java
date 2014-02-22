@@ -22,7 +22,9 @@ public class Colony {
 	
 	private float x;
 	private float y;
-	
+	private float centerX;
+	private float centerY;
+	private boolean selected;
 	
 	// loading only 1 background texture...
 	private int[] textures = new int[1];
@@ -44,9 +46,9 @@ public class Colony {
 	// defined by the verticies array
 	private float texture[] = {
 			0.0f,0.0f,
-			1.0f,0.0f,
-			1.0f,1.0f,
-			0.0f,1.0f,
+			0.5f,0.0f,
+			0.5f,0.5f,
+			0.0f,0.5f,
 	};
 	
 	// defines the square into
@@ -59,6 +61,8 @@ public class Colony {
 	public Colony(float x, float y){
 		this.x = x;
 		this.y = y;
+		centerX = x+radius;
+		centerY = y+radius;
 		
 		ByteBuffer byteBuff = ByteBuffer.allocateDirect(vertices.length*4);
 		byteBuff.order(ByteOrder.nativeOrder());
@@ -148,6 +152,31 @@ public class Colony {
 	public float getRadius() {
 		return radius;
 	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public float getCenterX() {
+		return centerX;
+	}
+
+	public void setCenterX(float centerX) {
+		this.centerX = centerX;
+	}
+
+	public float getCenterY() {
+		return centerY;
+	}
+
+	public void setCenterY(float centerY) {
+		this.centerY = centerY;
+	}
+	
 	
 	
 }

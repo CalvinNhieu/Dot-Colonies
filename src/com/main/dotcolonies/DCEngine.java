@@ -15,10 +15,13 @@ import com.main.dotcolonies.game.Dot;
 public class DCEngine {
 	
 	// Constants used in game
+	
+	// SCREEN
 	public static Context context; // Context of the engine
 	public static float X_MAX; // max x value of screen
 	public static float Y_MAX; // max y value of screen
 	
+	// MENU VARS
 	public static final int GAME_THREAD_DELAY = 1000; // delay before game thread begins (splash screen display time)
 	public static final int MENU_BUTTON_ALPHA = 0; // transparency for menu button
 	public static final boolean HAPTIC_BUTTON_FEEDBACK = true; // constant for button vibrate feedback
@@ -29,36 +32,39 @@ public class DCEngine {
 	public static final int GAME_THREAD_FPS_SLEEP = (1000/60); // value to output 60fps
 	public static Thread musicThread; // separate thread to run music player service
 	
+	
+	// IMAGES
 	public static final int BACKGROUND_LAYER = R.drawable.gamebkg; // image to display as game bkg
 	public static final int DOT_IMG = R.drawable.dot; // sprite for dot animations
-	public static final int COLONY_UNSELECTED = R.drawable.colonyunselected;
-	public static final int COLONY_SELECTED = R.drawable.colonyselected;
+	public static final int COLONY_SPRITESHEET = R.drawable.colonyspritesheet;
 	
+	// GLOBAL GAME VARS
 	public static final float acceleration = 0.5f; // player's acceleration value
 	public static final float lag = 0.93f; // to provide a smoother movement
 	public static float SCROLL_BACKGROUND_1 = 0.001f; // speed at which background 1 will scroll
 	public static float SCROLL_BACKGROUND_2 = -0.00075f; // speed at which background 2 will scroll
-	public static final float X_SCALE = 54.0f; // scale value from android canvas to OpenGL
-	public static final float Y_SCALE = 64.54f; // scale value from android canvas to OpenGL
 	public static final ArrayList<Dot> dotContainer = new ArrayList<Dot>(); // contains all the dots
 	public static final ArrayList<Colony> colonyContainer = new ArrayList<Colony>(); // contains all colonies
 	
-	// see if a dot is contained in a colony
-	public static boolean contains (ArrayList<Colony> c, Dot d) {
+	// see if a coordinate is contained in a colony
+	public static boolean contains (ArrayList<Colony> c, float x, float y) {
 		boolean contained = false;
-		
 		for (int i=0;i<c.size();i++) {
 			float centerX = c.get(i).getX() + c.get(i).getRadius(); // coordinates of the center of the colony
 			float centerY = c.get(i).getY() + c.get(i).getRadius();
-
-			
-			float distanceFromCenter = hypotenuse(d.getxPos(), d.getyPos(), centerX, centerY); // calculate distance between dot and center
-
-			
+			float distanceFromCenter = hypotenuse(x, y, centerX, centerY); // calculate distance between dot and center
 			if(distanceFromCenter <= c.get(i).getRadius()) contained = true; // true if dot is inside
 		}
-		
 		return contained;
+	}
+	
+	// returns which colony contains point
+	public static Colony whichContains (ArrayList<Colony> c, float x, float y) {
+		for (int i=0;i<c.size();i++) {
+			float distanceFromCenter = hypotenuse(x, y, c.get(i).getCenterX(), c.get(i).getCenterY()); // calculate distance between dot and center
+			if(distanceFromCenter <= c.get(i).getRadius()) return c.get(i); // true if dot is inside
+		}
+		return null;
 	}
 	
 	// BEZIER CURVE METHODS
