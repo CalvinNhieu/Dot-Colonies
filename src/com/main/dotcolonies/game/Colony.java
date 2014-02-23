@@ -26,6 +26,7 @@ public class Colony {
 	private float centerX;
 	private float centerY;
 	private boolean selected;
+	private boolean acquired;
 	private int index;
 	
 	// loading only 1 background texture...
@@ -60,10 +61,11 @@ public class Colony {
 			0,2,3,
 	};
 	
-	public Colony(float x, float y, int index){
+	public Colony(float x, float y, int index, boolean acquired){
 		this.x = x;
 		this.y = y;
 		this.index = index;
+		this.acquired = acquired;
 		centerX = x+radius;
 		centerY = y+radius;
 		
@@ -186,6 +188,14 @@ public class Colony {
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	public boolean isAcquired() {
+		return acquired;
+	}
+
+	public void setAcquired(boolean acquired) {
+		this.acquired = acquired;
 	}
 	
 	

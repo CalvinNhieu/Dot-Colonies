@@ -40,11 +40,23 @@ public class DCEngine {
 	// GLOBAL GAME VARS
 	public static final float acceleration = 0.5f; // player's acceleration value
 	public static final float lag = 0.93f; // to provide a smoother movement
+	public static final int FRAME_SPAWN_RATE = 50; // number of frames per dot spawn
+	public static int frameCount = 0; // counts number of frames 
 	public static float SCROLL_BACKGROUND_1 = 0.001f; // speed at which background 1 will scroll
 	public static float SCROLL_BACKGROUND_2 = -0.00075f; // speed at which background 2 will scroll
 	public static final ArrayList<Dot> dotContainer = new ArrayList<Dot>(); // contains all the dots
 	public static final ArrayList<Colony> colonyContainer = new ArrayList<Colony>(); // contains all colonies
 	public static int selectedColonyIndex = -1; // index of the currently selected colony (-1 means none selected)
+	
+	// update colonies' statuses
+	public static void updateColonies () {
+		for (int i=1;i<colonyContainer.size();i++) {
+			colonyContainer.get(i).setAcquired(false);
+		}
+		for (int i=0;i<dotContainer.size();i++) {
+			colonyContainer.get(dotContainer.get(i).getParentColonyIndex()).setAcquired(true);
+		}
+	}
 	
 	// see if a coordinate is contained in a colony
 	public static boolean contains (ArrayList<Colony> c, float x, float y) {
@@ -79,13 +91,47 @@ public class DCEngine {
 		return false;
 	}
 	
-	// method to check and reset dots to dormant behaviour (upon reentering target colony)
-	public static void checkForReEntry (Dot d) {
-		if (hypotenuse(d.getxPos(), d.getyPos(), colonyContainer.get(d.getTargetColonyIndex()).getCenterX(), colonyContainer.get(d.getTargetColonyIndex()).getCenterY()) <= Colony.getRadius()) {
-			d.setParentColonyIndex(d.getTargetColonyIndex());
-			d.setTargetColonyIndex(-1);
-			d.setLive(false);
+	// update player's values
+	public static void updateDots () {
+		spawnDots();
+		for (int i=0;i<dotContainer.size();i++) {
+			
+			updateDotBehaviour(contains(colonyContainer, dotContainer.get(i).getxPos(), dotContainer.get(i).getyPos()), dotContainer.get(i));
+			
+			moveToTarget(dotContainer.get(i));
+			moveDot(dotContainer.get(i));
+
 		}
+	}
+	
+	// determines dot behaviour logic based on whether dot is live or not
+	public static void updateDotBehaviour(boolean indicator, Dot d) {
+		if (d.isLive()) { // if live, wait for dot to enter new target colony
+			checkForReEntry(d);
+		}
+		else if (!d.isLive()) { // if dormant, act dormant inside current colony
+			dormantDotBehaviour(d);
+		}
+	}
+	
+	// spawn dots in acquired colonies
+	public static void spawnDots() {
+		if (frameCount > FRAME_SPAWN_RATE) {
+			frameCount = 0;
+		}
+		else if (frameCount >= FRAME_SPAWN_RATE) {
+			dotContainer.add(new Dot(colonyContainer.get(0).getCenterX(),colonyContainer.get(0).getCenterY(),0));
+		}
+		frameCount++;
+	}
+	
+	
+	// INITIATE DORMANT DOT BEHAVIOUR AFTER SPAWN
+	public static void initiateDot (Dot d) {
+		Colony containingColony = whichContains(colonyContainer, d.getxPos(), d.getyPos()); // is the colony dot is inside
+		double theta = Math.random()*2.0*Math.PI; // calculate a random angle 
+		d.setxTarget((float) (Colony.getRadius()*Math.cos(theta)) + containingColony.getCenterX()); // redirect dot's target to random point on colony's edge
+		d.setyTarget((float) (Colony.getRadius()*Math.sin(theta)) + containingColony.getCenterY());
 	}
 	
 	// HOW THE DOT BEHAVES WITHIN A COLONY
@@ -97,6 +143,15 @@ public class DCEngine {
 			double theta = Math.random()*2.0*Math.PI; // calculate a random angle 
 			d.setxTarget((float) (Colony.getRadius()*Math.cos(theta)) + containingColony.getCenterX()); // redirect dot's target to random point on colony's edge
 			d.setyTarget((float) (Colony.getRadius()*Math.sin(theta)) + containingColony.getCenterY());
+		}
+	}
+	
+	// method to check and reset dots to dormant behaviour (upon reentering target colony)
+	public static void checkForReEntry (Dot d) {
+		if (hypotenuse(d.getxPos(), d.getyPos(), colonyContainer.get(d.getTargetColonyIndex()).getCenterX(), colonyContainer.get(d.getTargetColonyIndex()).getCenterY()) <= Colony.getRadius()) {
+			d.setParentColonyIndex(d.getTargetColonyIndex());
+			d.setTargetColonyIndex(-1);
+			d.setLive(false);
 		}
 	}
 	

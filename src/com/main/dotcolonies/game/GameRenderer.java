@@ -100,8 +100,11 @@ public class GameRenderer implements Renderer{
 			if (DCEngine.colonyContainer.get(i).isSelected()) {
 				gl.glTranslatef(0.0f,0.0f,0.0f);
 			}
+			else if (DCEngine.colonyContainer.get(i).isAcquired()) {
+				gl.glTranslatef(0.5f, 0.5f, 0.0f);
+			}
 			else {
-				gl.glTranslatef(0.5f,0.5f,0.0f);
+				gl.glTranslatef(0.5f,0.0f,0.0f);
 			}
 			DCEngine.colonyContainer.get(0).draw(gl);
 			gl.glPopMatrix();
@@ -109,26 +112,7 @@ public class GameRenderer implements Renderer{
 		}
 	}
 	
-	private void updateDotBehaviour(boolean indicator, Dot d) {
-		if (d.isLive()) {
-			DCEngine.checkForReEntry(d);
-		}
-		else if (!d.isLive()) {
-			DCEngine.dormantDotBehaviour(d);
-		}
-	}
 	
-	// update player's values
-	private void updateDots (GL10 gl) {
-		for (int i=0;i<DCEngine.dotContainer.size();i++) {
-			
-			updateDotBehaviour(DCEngine.contains(DCEngine.colonyContainer, DCEngine.dotContainer.get(i).getxPos(), DCEngine.dotContainer.get(i).getyPos()), DCEngine.dotContainer.get(i));
-			
-			DCEngine.moveToTarget(DCEngine.dotContainer.get(i));
-			DCEngine.moveDot(DCEngine.dotContainer.get(i));
-
-		}
-	}
 	
 	// constantly called. THE GAME LOOP
 	@Override
@@ -142,7 +126,8 @@ public class GameRenderer implements Renderer{
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); // must be called before transforming and rendering matrices?
 		
 		// BEGIN GAME LOGIC
-		updateDots(gl);
+		DCEngine.updateDots();
+		DCEngine.updateColonies();
 		
 		drawDots(gl);
 		drawColonies(gl);
@@ -174,15 +159,17 @@ public class GameRenderer implements Renderer{
 		Point size = new Point();
 		display.getSize(size);
 		DCEngine.setSize(size.x, size.y);
+
+		// TEST CONTAINERS
+		DCEngine.colonyContainer.add(new Colony(0.0f*DCEngine.X_MAX,0.0f*DCEngine.Y_MAX,0,true));
+		DCEngine.colonyContainer.add(new Colony(0.07f*DCEngine.X_MAX,0.65f*DCEngine.Y_MAX,1,false));
+		DCEngine.colonyContainer.add(new Colony(0.15f*DCEngine.X_MAX,0.25f*DCEngine.Y_MAX,2,false));
+		DCEngine.colonyContainer.add(new Colony(0.6f*DCEngine.X_MAX,0.07f*DCEngine.Y_MAX,3,false));
+		DCEngine.colonyContainer.add(new Colony(0.5f*DCEngine.X_MAX,0.5f*DCEngine.Y_MAX,4,false));
+		DCEngine.colonyContainer.add(new Colony(0.4f*DCEngine.X_MAX,0.75f*DCEngine.Y_MAX,5,false));
 		
 		// TEST DOTS
-		DCEngine.dotContainer.add(new Dot(0.55f*DCEngine.X_MAX,0.55f*DCEngine.Y_MAX));
-		DCEngine.dotContainer.add(new Dot(0.55f*DCEngine.X_MAX,0.55f*DCEngine.Y_MAX));
-		DCEngine.dotContainer.add(new Dot(0.55f*DCEngine.X_MAX,0.55f*DCEngine.Y_MAX));
-		DCEngine.dotContainer.add(new Dot(0.55f*DCEngine.X_MAX,0.55f*DCEngine.Y_MAX));
-		// TEST CONTAINERS
-		DCEngine.colonyContainer.add(new Colony(0.0f*DCEngine.X_MAX,0.0f*DCEngine.Y_MAX,0));
-		DCEngine.colonyContainer.add(new Colony(0.5f*DCEngine.X_MAX,0.5f*DCEngine.Y_MAX,1));
+		DCEngine.dotContainer.add(new Dot(DCEngine.colonyContainer.get(0).getCenterX(),DCEngine.colonyContainer.get(0).getCenterY(), 0));
 		
 		// LOAD TEXTURES
 		background_layer_1.loadTexture(gl, DCEngine.BACKGROUND_LAYER, DCEngine.context);

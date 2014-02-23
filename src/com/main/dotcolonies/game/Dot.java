@@ -8,6 +8,8 @@ import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.main.dotcolonies.DCEngine;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,17 +50,19 @@ public class Dot {
 		0,2,3,
 	};
 	
-	public Dot (float xPos, float yPos) {
+	public Dot (float xPos, float yPos, int parentColonyIndex) {
 		this.xPos = xPos;
 		this.yPos = yPos;
+		this.parentColonyIndex = parentColonyIndex;
 		xPos_ = xPos;
 		yPos_ = yPos;
 		xTarget = xPos;
 		yTarget = yPos;
 		distance = 0;
 		live = false;
-		parentColonyIndex = 1;
 		targetColonyIndex = -1;
+		
+		DCEngine.initiateDot(this);
 		
 		ByteBuffer byteBuff = ByteBuffer.allocateDirect(vertices.length*4);
 		byteBuff.order(ByteOrder.nativeOrder());
