@@ -29,7 +29,6 @@ public class Game extends Activity {
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			if (DCEngine.contains(DCEngine.colonyContainer, X, Y)) { // if mouseclick is inside a colony
-				
 				// simply put a colony in selection if none are selected
 				if (!DCEngine.isColonySelected()) {
 					for (int i=0;i<DCEngine.colonyContainer.size();i++) {
@@ -46,6 +45,7 @@ public class Game extends Activity {
 							DCEngine.dotContainer.get(i).setxTarget(tappedColony.getCenterX()); // redirect dot's target to new colony
 							DCEngine.dotContainer.get(i).setyTarget(tappedColony.getCenterY()); 
 							
+							DCEngine.dotContainer.get(i).setParentColonyIndex(-1);
 							DCEngine.dotContainer.get(i).setTargetColonyIndex(tappedColony.getIndex()); // set dot's target colony to new colony
 						}
 					}
@@ -54,20 +54,22 @@ public class Game extends Activity {
 					}
 					DCEngine.selectedColonyIndex = -1; // set in engine as well
 				}
+				// if a the selected colony is tapped
+				else if (tappedColony == DCEngine.colonyContainer.get(DCEngine.selectedColonyIndex)) {
+					DCEngine.colonyContainer.get(DCEngine.selectedColonyIndex).setSelected(false);
+				}
 			}
-			else if (!DCEngine.contains(DCEngine.colonyContainer, X, Y)) {
-				//DCEngine.dotContainer.get(0).setxTarget(X);
-				//DCEngine.dotContainer.get(0).setyTarget(Y);
+			// if mouseclick is outside of a colony
+			else{
 				for (int i=0;i<DCEngine.colonyContainer.size();i++) {
 					DCEngine.colonyContainer.get(i).setSelected(false);
 				}
-		}
+			}
 		}
 		
 		return false;
 	}
 
-	// stoopid method
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return true;

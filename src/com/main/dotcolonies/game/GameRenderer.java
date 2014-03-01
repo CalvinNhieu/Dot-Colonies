@@ -126,6 +126,7 @@ public class GameRenderer implements Renderer{
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); // must be called before transforming and rendering matrices?
 		
 		// BEGIN GAME LOGIC
+		DCEngine.setDelta();
 		DCEngine.updateDots();
 		DCEngine.updateColonies();
 		
@@ -133,6 +134,7 @@ public class GameRenderer implements Renderer{
 		drawColonies(gl);
 		//scrollBackground1(gl);
 		//scrollBackground2(gl);
+		System.out.println("FPS: " + DCEngine.FPS + " DELTA: " + DCEngine.delta);
 		
 	}
 	

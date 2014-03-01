@@ -29,7 +29,8 @@ public class DCEngine {
 	public static final int R_VOLUME = 100; // constant for right ear volume output
 	public static final int L_VOLUME = 100; // constant for left ear volume output
 	public static final boolean LOOP_BKG_MUSIC = true; // constant for looping music flag
-	public static final int GAME_THREAD_FPS_SLEEP = (1000/60); // value to output 60fps
+	public static final float GAME_FPS = 60f; // target frame rate 
+	public static final int GAME_THREAD_FPS_SLEEP = (int) (1000/GAME_FPS); // value to output 60fps
 	public static Thread musicThread; // separate thread to run music player service
 	
 	// IMAGES
@@ -38,15 +39,20 @@ public class DCEngine {
 	public static final int COLONY_SPRITESHEET = R.drawable.colonyspritesheet;
 	
 	// GLOBAL GAME VARS
-	public static final float acceleration = 0.5f; // player's acceleration value
-	public static final float lag = 0.93f; // to provide a smoother movement
-	public static final int FRAME_SPAWN_RATE = 50; // number of frames per dot spawn
+	public static final float acceleration = 0.5f; // player's acceleration
+	public static final float lag = 0.93f; // to provide a smoother
+	public static final int FRAME_SPAWN_RATE = 1; // number of frames per dot spawn
+	public static final int DOT_CAPACITY = 50; // MAXIMUM # OF DOTS TO SPAWN
 	public static int frameCount = 0; // counts number of frames 
 	public static float SCROLL_BACKGROUND_1 = 0.001f; // speed at which background 1 will scroll
 	public static float SCROLL_BACKGROUND_2 = -0.00075f; // speed at which background 2 will scroll
 	public static final ArrayList<Dot> dotContainer = new ArrayList<Dot>(); // contains all the dots
 	public static final ArrayList<Colony> colonyContainer = new ArrayList<Colony>(); // contains all colonies
 	public static int selectedColonyIndex = -1; // index of the currently selected colony (-1 means none selected)
+	public static long last = System.currentTimeMillis();
+	public static long  curr = 0;
+	public static float delta = 0;
+	public static float FPS = 0;
 	
 	// update colonies' statuses
 	public static void updateColonies () {
@@ -54,7 +60,8 @@ public class DCEngine {
 			colonyContainer.get(i).setAcquired(false);
 		}
 		for (int i=0;i<dotContainer.size();i++) {
-			colonyContainer.get(dotContainer.get(i).getParentColonyIndex()).setAcquired(true);
+			if (dotContainer.get(i).getParentColonyIndex() != -1) 
+				colonyContainer.get(dotContainer.get(i).getParentColonyIndex()).setAcquired(true);
 		}
 	}
 	
@@ -73,8 +80,8 @@ public class DCEngine {
 	// returns which colony contains point
 	public static Colony whichContains (ArrayList<Colony> c, float x, float y) {
 		for (int i=0;i<c.size();i++) {
-			float distanceFromCenter = hypotenuse(x, y, c.get(i).getCenterX(), c.get(i).getCenterY()); // calculate distance between dot and center
-			if(distanceFromCenter <= Colony.getRadius()) return c.get(i); // true if dot is inside
+				float distanceFromCenter = hypotenuse(x, y, c.get(i).getCenterX(), c.get(i).getCenterY()); // calculate distance between dot and center
+				if(distanceFromCenter <= Colony.getRadius()) return c.get(i); // true if dot is inside
 		}
 		return null;
 	}
@@ -116,12 +123,9 @@ public class DCEngine {
 	
 	// spawn dots in acquired colonies
 	public static void spawnDots() {
-		if (frameCount > FRAME_SPAWN_RATE) {
-			frameCount = 0;
-		}
-		else if (frameCount >= FRAME_SPAWN_RATE) {
+		if (frameCount > FRAME_SPAWN_RATE) frameCount = 0;
+		else if (frameCount >= FRAME_SPAWN_RATE && dotContainer.size()<DOT_CAPACITY) 
 			dotContainer.add(new Dot(colonyContainer.get(0).getCenterX(),colonyContainer.get(0).getCenterY(),0));
-		}
 		frameCount++;
 	}
 	
@@ -158,8 +162,8 @@ public class DCEngine {
 	// BEZIER CURVE METHODS
 	private static void pushDot(Dot d) {
 		d.setDistance(hypotenuse(d.getxPos(), d.getyPos(), d.getxTarget(), d.getyTarget()));
-		d.setxPos(d.getxPos() + acceleration*((d.getxTarget()-d.getxPos())/d.getDistance()));
-		d.setyPos(d.getyPos() + acceleration*((d.getyTarget()-d.getyPos())/d.getDistance()));
+		d.setxPos(d.getxPos() + (acceleration*((d.getxTarget()-d.getxPos())/d.getDistance()))*delta*GAME_FPS);
+		d.setyPos(d.getyPos() + (acceleration*((d.getyTarget()-d.getyPos())/d.getDistance()))*delta*GAME_FPS);
 	}
 	
 	private static float hypotenuse(float x1, float y1, float x2, float y2) { // calculates hypotenuse of a triangle
@@ -188,6 +192,21 @@ public class DCEngine {
 	}
 	// BEZIER CURVES METHODS END
 	
+	
+	
+	public static void setSize(float x, float y) {
+		X_MAX = x;
+		Y_MAX = y;
+	}
+	
+	public static void setDelta () {
+		curr = System.currentTimeMillis();
+		FPS = 1000/(curr-last);
+		if (FPS < 30) FPS = 30;
+		delta = 0.6f/FPS;
+		last = System.currentTimeMillis();
+	}
+	
 	// housekeeping ... cleans up when app is exited
 	public static void onExit (View v) {
 
@@ -195,11 +214,6 @@ public class DCEngine {
 		context.stopService(playBkgMusic);
 		musicThread.stop(); // idk what to do about this
 		
-	}
-	
-	public static void setSize(float x, float y) {
-		X_MAX = x;
-		Y_MAX = y;
 	}
 	
 }
