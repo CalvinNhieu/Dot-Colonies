@@ -1,4 +1,4 @@
 Dot-Colonies
 ============
 
-A multiplayer divide and conquer game developed for Android 
+An agent-based behaviour simulator built for Android. Graphics rendered using OpenGL ES.
